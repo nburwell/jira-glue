@@ -37,7 +37,23 @@ Now you can construct and use the Glue object
 g = Glue.new
 ```
 
+### Launch from Hotkey
+
+* Use Alfred with power pack or QuickSilver (free)
+* Run the file `browser-glue.rb` via Terminal then exit
+  * E.g. `/Users/<name>/jira-glue/browser-glue.rb; exit`
+* Tip: if using Terminal, you may want to go to "Preferences" > Settings > Default profile > Shell and select "Close if the shell exited cleanly" under "When shell exits"
+
 ### Documentation
+
+#### Glue#issue_from_active_browser
+
+* Searches for issue and calls issue_on_clipboard if active tab in Chrome is viewing a JIRA issue
+* Returns nil
+```
+g = Glue.new
+g.issue_from_active_browser
+```
 
 #### Glue#issue_on_clipboard(jira_key)
 
