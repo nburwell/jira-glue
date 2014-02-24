@@ -8,10 +8,10 @@ require 'jira'
 module JIRA
   class Wrapper
     
-    JIRA_BASE_URL       = ENV["jira_base_url"]
+    JIRA_BASE_URL       = ENV["jira_base_url"] or raise "jira_base_url ENV not set"
     JIRA_CLIENT_OPTIONS = {
-        :username        => ENV["jira_username"],
-        :password        => ENV["jira_password"],
+        :username        => (ENV["jira_username"] or raise "jira_username ENV not set"),
+        :password        => (ENV["jira_password"] or raise "jira_password ENV not set"),
         :site            => JIRA_BASE_URL,
         :context_path    => "",
         :auth_type       => :basic,
