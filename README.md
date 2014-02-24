@@ -27,7 +27,7 @@ Launch `irb` and then require main file
 
 ```
 $ irb
-irb> require './glue.rb'
+irb> require './lib/glue.rb'
 => true
 ```
 
@@ -40,7 +40,16 @@ g = Glue.new
 ### Launch from Hotkey
 
 * Use Alfred with power pack or QuickSilver (free)
-* Run the file `browser-glue.rb` via Terminal then exit
+* Create a file called `secrets` next to browser-glue.rb
+
+    ```
+    ENV['jira_username'] = 'sample_user'
+    ENV['jira_password'] = 'p@ss'
+    ENV['jira_base_url'] = 'https://your-company.atlassian.net'
+    ```
+
+* Create a custom action and assign to a hotkey:
+  * Run the file `browser-glue.rb` via Terminal then exit
   * E.g. `/Users/<name>/jira-glue/browser-glue.rb; exit`
 * Tip: if using Terminal, you may want to go to "Preferences" > Settings > Default profile > Shell and select "Close if the shell exited cleanly" under "When shell exits"
 
