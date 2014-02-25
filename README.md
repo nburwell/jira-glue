@@ -39,7 +39,7 @@ g = Glue.new
 
 ### Launch from Hotkey
 
-* Use Alfred with power pack or QuickSilver (free)
+* Use Automator (recommended), or Alfred with power pack or QuickSilver
 * Create a file called `secrets` next to browser-glue.rb
 
     ```
@@ -48,9 +48,20 @@ g = Glue.new
     ENV['jira_base_url'] = 'https://your-company.atlassian.net'
     ```
 
-* Create a custom action and assign to a hotkey:
-  * Run the file `browser-glue.rb` via Terminal then exit
-  * E.g. `/Users/<name>/jira-glue/browser-glue.rb; exit`
+#### Using Automator
+* Launch "Automator"
+* Create new "Service"
+* Ensure that service receives 'no input' in 'any appliction'
+* For action, select "Run Shell Script"
+* Enter command: `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
+* Save action with a descriptive name
+* Go to "Automator" menu, then "Services" > "Services Preferences"
+* Find the new action and click to add a shortcut key (I use CTRL-J for JIRA)
+
+#### Using Alfred, Quicksilver, etc
+* Follow application-specific instructions to run a custom script based on a keyboard shortcut
+* Run the file `browser-glue.rb` ensuring that correct Ruby version and Gems are picked up
+  * E.g. `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
 * Tip: if using Terminal, you may want to go to "Preferences" > Settings > Default profile > Shell and select "Close if the shell exited cleanly" under "When shell exits"
 
 ### Documentation
