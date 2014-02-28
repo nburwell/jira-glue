@@ -7,4 +7,4 @@ require 'bundler'
 require File.expand_path('../lib/glue.rb',  __FILE__)
 
 g = Glue.new
-g.issue_from_active_browser
+g.issues_from_active_browser

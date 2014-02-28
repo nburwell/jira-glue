@@ -36,15 +36,41 @@ module JIRA
       end
     end
     
+    def issues_from_jql(jql)
+      begin
+        @jira_client.Issue.jql(jql)
+      rescue JIRA::HTTPError => ex
+        puts "Unable to get issues from jql: #{jql}\n #{ex.message}\n\n #{ex.inspect}"
+      end
+    end
+    
+    def issues_from_filter(filter_id)
+      begin
+        filter = @jira_client.Filter.find(filter_id)
+        
+        if filter
+          filter.issues
+        else
+          raise "Filter not found: #{filter_id}"
+        end
+      rescue JIRA::HTTPError => ex
+        puts "Unable to get issues from filter: #{filter_id}\n #{ex.message}\n\n #{ex.inspect}"
+      end
+    end
+    
     def get_issue_description_and_link(key)
       if issue = find_issue(key)
-        summary = issue.fields['summary']
-        link    = "#{JIRA_BASE_URL}/issues/#{key}"
-
-        [summary, link]
+        self.class.issue_description_and_link(issue)
       else
         raise "Could not get issue from key: #{key}"
       end
+    end
+    
+    def self.issue_description_and_link(issue)
+      summary = issue.fields['summary']
+      link    = "#{JIRA_BASE_URL}/issues/#{issue.key}"
+
+      [summary, link]
     end
   end
 end

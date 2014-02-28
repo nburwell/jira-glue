@@ -12,13 +12,35 @@ class Glue
     @browser = Browser.new(:Chrome)
   end
 
-  def issue_from_active_browser
+  def issues_from_active_browser
     if key = @browser.jira_key_from_active_tab
       issue_on_clipboard(key)
+    elsif jql = @browser.jira_search_from_active_tab
+      issues_on_clipboard(@jira.issues_from_jql(jql))
+    elsif filter = @browser.jira_filter_from_active_tab
+      issues_on_clipboard(@jira.issues_from_filter(filter))
     else
       print "\a"; print "\a"
       puts "No issue found from active browser"
     end
+  end
+  
+  def issues_on_clipboard(issues)
+    html = '<br /><ul>'
+    text = ''
+    
+    issues.each do |i|
+      summary, link = @jira.class.issue_description_and_link(i)
+      html << "<li><a href='#{link}'>#{i.key}</a>: #{summary}</li>"
+      text << "#{i.key}: #{summary} \n"
+    end
+    
+    html << '</ul><br />'
+
+    Clipboard.insert!(html, text)
+    
+    puts "Added #{issues.count} issues to clipboard"
+    print "\a"
   end
   
   def issue_on_clipboard(key)

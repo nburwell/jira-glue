@@ -25,9 +25,19 @@ class Browser
   end
     
   def jira_key_from_active_tab()
-    url = get_url
-    
-    if matches = url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/browse\/([^?]*)/)
+    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/browse\/([^?]*)/)
+      matches[1]
+    end
+  end
+  
+  def jira_search_from_active_tab()
+    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/issues\/\?jql=([^=]*)/)
+      CGI::unescape(matches[1])
+    end
+  end
+  
+  def jira_filter_from_active_tab()
+    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/issues\/\?filter=([^=]*)/)
       matches[1]
     end
   end
