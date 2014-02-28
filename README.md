@@ -19,7 +19,7 @@ https://your-company.atlassian.net
 Setup Ruby and run bundle install (tested against Ruby 1.9.3)
 
 ```
-rbenv local 1.9.3-p44
+rbenv local 1.9.3-p448
 bundle install
 ```
 
@@ -66,13 +66,13 @@ g = Glue.new
 
 ### Documentation
 
-#### Glue#issue_from_active_browser
+#### Glue#issues_from_active_browser
 
 * Searches for issue and calls issue_on_clipboard if active tab in Chrome is viewing a JIRA issue
 * Returns nil
 ```
 g = Glue.new
-g.issue_from_active_browser
+g.issues_from_active_browser
 ```
 
 #### Glue#issue_on_clipboard(jira_key)
