@@ -8,30 +8,28 @@ require 'jira'
 module JIRA
   class Wrapper
     
-    JIRA_BASE_URL       = ENV["jira_base_url"] or raise "jira_base_url ENV not set"
+    JIRA_BASE_URL       = ENV["jira_base_url"] or raise "jira_base_url not set in config"
     JIRA_CLIENT_OPTIONS = {
-        :username        => (ENV["jira_username"] or raise "jira_username ENV not set"),
-        :password        => (ENV["jira_password"] or raise "jira_password ENV not set"),
         :site            => JIRA_BASE_URL,
         :context_path    => "",
         :auth_type       => :basic,
-        :use_ssl         => true,
-        :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE,
+        :use_ssl         => true
     }
 
-    def initialize()
-      @jira_client = JIRA::Client.new(JIRA_CLIENT_OPTIONS)
+    def initialize(app_name)
+      @app_name      = app_name
+      client_options = JIRA_CLIENT_OPTIONS.dup
+      client_options[:username] = username = (ENV["jira_username"]             or raise "jira_username not set in config")
+      client_options[:password] = self.class.get_password(@app_name, username) or raise "jira_password not found / not accessible in keychain"
+
+      @jira_client = JIRA::Client.new(client_options)
     end
     
     def find_issue(key)
       begin  
         issue = @jira_client.Issue.find(key)
       rescue JIRA::HTTPError => ex
-        if ex.message == "Unauthorized"
-          puts "Unauthorized: please check that jira_username and jira_password are correctly set as ENV variables"
-        else
-          puts ex.message
-        end
+        handle_jira_error(ex)
         nil
       end
     end
@@ -40,7 +38,8 @@ module JIRA
       begin
         @jira_client.Issue.jql(jql)
       rescue JIRA::HTTPError => ex
-        puts "Unable to get issues from jql: #{jql}\n #{ex.message}\n\n #{ex.inspect}"
+        handle_jira_error(ex, "Unable to get issues from jql: #{jql}")
+        nil
       end
     end
     
@@ -54,7 +53,8 @@ module JIRA
           raise "Filter not found: #{filter_id}"
         end
       rescue JIRA::HTTPError => ex
-        puts "Unable to get issues from filter: #{filter_id}\n #{ex.message}\n\n #{ex.inspect}"
+        handle_jira_error(ex, "Unable to get issues from filter: #{filter_id}")
+        nil
       end
     end
     
@@ -71,6 +71,22 @@ module JIRA
       link    = "#{JIRA_BASE_URL}/issues/#{issue.key}"
 
       [summary, link]
+    end
+    
+    def self.get_password(app_name, username)
+      `security 2>&1 >/dev/null find-generic-password -g -l '#{app_name}' -a #{username} \
+       |ruby -e 'print $1 if STDIN.gets =~ /^password: "(.*)"$/'`
+    end
+    
+    private
+    
+    def handle_jira_error(ex, context = nil)
+      if ex.message == "Unauthorized"
+        puts "Unauthorized: please check that jira_username and jira_password are correctly set"
+      else
+        puts context if context
+        puts ex.message
+      end
     end
   end
 end

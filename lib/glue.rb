@@ -7,8 +7,10 @@ require File.expand_path('../clipboard.rb',  __FILE__)
 require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
+  APP_NAME = 'jira-glue'
+  
   def initialize()
-    @jira    = JIRA::Wrapper.new
+    @jira    = JIRA::Wrapper.new(APP_NAME)
     @browser = Browser.new(:Chrome)
   end
 
