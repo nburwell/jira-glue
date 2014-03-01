@@ -7,11 +7,9 @@ require File.expand_path('../clipboard.rb',  __FILE__)
 require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
-  APP_NAME = 'jira-glue'
-  
-  def initialize()
-    @jira    = JIRA::Wrapper.new(APP_NAME)
-    @browser = Browser.new(:Chrome)
+  def initialize(config)
+    @jira    = JIRA::Wrapper.new(config)
+    @browser = Browser.new(:Chrome, @jira.base_url)
   end
 
   def issues_from_active_browser
@@ -32,7 +30,7 @@ class Glue
     text = ''
     
     issues.each do |i|
-      summary, link = @jira.class.issue_description_and_link(i)
+      summary, link = @jira.issue_description_and_link_from_issue(i)
       html << "<li><a href='#{link}'>#{i.key}</a>: #{summary}</li>"
       text << "#{i.key}: #{summary} \n"
     end
@@ -47,7 +45,7 @@ class Glue
   
   def issue_on_clipboard(key)
     puts "Searching for #{key}..."
-    summary, link = @jira.get_issue_description_and_link(key)
+    summary, link = @jira.issue_description_and_link(key)
     
     html = "<a href='#{link}'>#{key}</a>: #{summary}"
     text = "#{key}: #{summary}"

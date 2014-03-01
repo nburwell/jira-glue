@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 
-# load ENV vars
-load File.expand_path('../config',  __FILE__)
-
 require 'bundler'
+require 'yaml'
 require File.expand_path('../lib/glue.rb',  __FILE__)
 
-g = Glue.new
+# load config
+config = YAML.load_file(File.expand_path('../config.yml',  __FILE__))
+
+g = Glue.new(config)
 g.issues_from_active_browser

@@ -3,7 +3,6 @@
 
 require 'rubygems'
 require 'appscript'
-require File.expand_path('../jira_wrapper.rb',  __FILE__)
 
 include Appscript
 
@@ -13,7 +12,7 @@ include Appscript
 # b.jira_key_from_active_tab
 
 class Browser
-  def initialize(type)
+  def initialize(type, base_url)
     case type
     when :Chrome
       "Google Chrome"
@@ -21,23 +20,24 @@ class Browser
       raise "Unsupported browser type: #{type}"
     end
     
-    @browser = app("Google Chrome")
+    @browser  = app("Google Chrome")
+    @base_url = base_url
   end
     
   def jira_key_from_active_tab()
-    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/browse\/([^?]*)/)
+    if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/browse\/([^?]*)/)
       matches[1]
     end
   end
   
   def jira_search_from_active_tab()
-    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/issues\/\?jql=([^=]*)/)
+    if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/issues\/\?jql=([^=]*)/)
       CGI::unescape(matches[1])
     end
   end
   
   def jira_filter_from_active_tab()
-    if matches = get_url.match(/#{JIRA::Wrapper::JIRA_BASE_URL.sub(/https?:\/\//, '')}\/issues\/\?filter=([^=]*)/)
+    if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/issues\/\?filter=([^=]*)/)
       matches[1]
     end
   end

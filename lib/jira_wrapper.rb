@@ -7,20 +7,24 @@ require 'jira'
 
 module JIRA
   class Wrapper
-    
-    JIRA_BASE_URL       = ENV["jira_base_url"] or raise "jira_base_url not set in config"
+
     JIRA_CLIENT_OPTIONS = {
-        :site            => JIRA_BASE_URL,
         :context_path    => "",
         :auth_type       => :basic,
         :use_ssl         => true
     }
 
-    def initialize(app_name)
-      @app_name      = app_name
-      client_options = JIRA_CLIENT_OPTIONS.dup
-      client_options[:username] = username = (ENV["jira_username"]             or raise "jira_username not set in config")
-      client_options[:password] = self.class.get_password(@app_name, username) or raise "jira_password not found / not accessible in keychain"
+    attr_reader :base_url
+    
+    def initialize(config)
+      client_options            = JIRA_CLIENT_OPTIONS.dup
+            
+      @app_name                 = config["app"]["name"]
+      @base_url                 = config["jira_client"]["base_url"]                                     or raise "jira_client['base_url'] not set in config"
+
+      client_options[:site]     = @base_url
+      client_options[:username] = config["jira_client"]["username"]                                     or raise "jira_client['username'] not set in config"
+      client_options[:password] = self.class.get_password(@app_name, config["jira_client"]["username"]) or raise "jira_client['password'] not found / not accessible in keychain"
 
       @jira_client = JIRA::Client.new(client_options)
     end
@@ -58,17 +62,17 @@ module JIRA
       end
     end
     
-    def get_issue_description_and_link(key)
+    def issue_description_and_link(key)
       if issue = find_issue(key)
-        self.class.issue_description_and_link(issue)
+        issue_description_and_link_from_issue(issue)
       else
         raise "Could not get issue from key: #{key}"
       end
     end
     
-    def self.issue_description_and_link(issue)
+    def issue_description_and_link_from_issue(issue)
       summary = issue.fields['summary']
-      link    = "#{JIRA_BASE_URL}/issues/#{issue.key}"
+      link    = "#{base_url}/issues/#{issue.key}"
 
       [summary, link]
     end
@@ -77,7 +81,7 @@ module JIRA
       `security 2>&1 >/dev/null find-generic-password -g -l '#{app_name}' -a #{username} \
        |ruby -e 'print $1 if STDIN.gets =~ /^password: "(.*)"$/'`
     end
-    
+
     private
     
     def handle_jira_error(ex, context = nil)
