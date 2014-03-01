@@ -2,30 +2,33 @@
 #! /usr/bin/ruby
 
 require 'bundler'
+require File.expand_path('../notifier.rb',  __FILE__)
 require File.expand_path('../jira_wrapper.rb',  __FILE__)
 require File.expand_path('../clipboard.rb',  __FILE__)
 require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
   def initialize(config)
-    @jira    = JIRA::Wrapper.new(config)
-    @browser = Browser.new(:Chrome, @jira.base_url)
+    @notifier = Notifier.new(config["app"]["name"], config["app"]["title"])
+    @jira     = JIRA::Wrapper.new(config, @notifier)
+    @browser  = Browser.new(:Chrome, @jira.base_url)
   end
 
   def issues_from_active_browser
     if key = @browser.jira_key_from_active_tab
-      issue_on_clipboard(key)
+      issue_on_clipboard(@jira.find_issue(key))
     elsif jql = @browser.jira_search_from_active_tab
       issues_on_clipboard(@jira.issues_from_jql(jql))
     elsif filter = @browser.jira_filter_from_active_tab
       issues_on_clipboard(@jira.issues_from_filter(filter))
     else
-      print "\a"; print "\a"
-      puts "No issue found from active browser"
+      @notifier.show_message!("No issue found from active browser")
     end
   end
   
   def issues_on_clipboard(issues)
+    issues or return
+    
     html = '<br /><ul>'
     text = ''
     
@@ -38,21 +41,20 @@ class Glue
     html << '</ul><br />'
 
     Clipboard.insert!(html, text)
-    
-    puts "Added #{issues.count} issues to clipboard"
-    print "\a"
+
+    # @notifier.show_message!("Added #{issues.count} issues to clipboard")
   end
   
-  def issue_on_clipboard(key)
-    puts "Searching for #{key}..."
-    summary, link = @jira.issue_description_and_link(key)
+  def issue_on_clipboard(issue)
+    issue or return
     
-    html = "<a href='#{link}'>#{key}</a>: #{summary}"
-    text = "#{key}: #{summary}"
+    summary, link = @jira.issue_description_and_link_from_issue(issue)
+    
+    html = "<a href='#{link}'>#{issue.key}</a>: #{summary}"
+    text = "#{issue.key}: #{summary}"
     
     Clipboard.insert!(html, text)
-    
-    puts "Added '#{text}' to clipboard"
-    print "\a"
+
+    # @notifier.show_message!("Added #{issue.key} to clipboard")
   end
 end

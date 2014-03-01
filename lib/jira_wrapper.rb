@@ -16,11 +16,12 @@ module JIRA
 
     attr_reader :base_url
     
-    def initialize(config)
+    def initialize(config, notifier)
       client_options            = JIRA_CLIENT_OPTIONS.dup
             
       @app_name                 = config["app"]["name"]
       @base_url                 = config["jira_client"]["base_url"]                                     or raise "jira_client['base_url'] not set in config"
+      @notifier                 = notifier
 
       client_options[:site]     = @base_url
       client_options[:username] = config["jira_client"]["username"]                                     or raise "jira_client['username'] not set in config"
@@ -62,14 +63,6 @@ module JIRA
       end
     end
     
-    def issue_description_and_link(key)
-      if issue = find_issue(key)
-        issue_description_and_link_from_issue(issue)
-      else
-        raise "Could not get issue from key: #{key}"
-      end
-    end
-    
     def issue_description_and_link_from_issue(issue)
       summary = issue.fields['summary']
       link    = "#{base_url}/issues/#{issue.key}"
@@ -86,10 +79,9 @@ module JIRA
     
     def handle_jira_error(ex, context = nil)
       if ex.message == "Unauthorized"
-        puts "Unauthorized: please check that jira_username and jira_password are correctly set"
+        @notifier.show_message!("Unauthorized: please check that jira_username and jira_password are correctly set")
       else
-        puts context if context
-        puts ex.message
+        @notifier.show_message!("#{"#{context}\n" if context}#{ex.message}")
       end
     end
   end
