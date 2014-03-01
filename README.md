@@ -5,55 +5,54 @@ Command line utility app for JIRA tracking system
 
 ### Setup
 
-The following environment vars are required:
+##### Create a file called `config.yml` in root of directory, with configuration details
 
-```
-export jira_username=<username>
-export jira_password=<password>
-export jira_base_url=<url>
-```
+```yaml
+app:
+  name: jira-glue
+  title: JIRA glue
 
-An example base URL would look like:  
-https://your-company.atlassian.net
-
-Setup Ruby and run bundle install (tested against Ruby 1.9.3)
-
+jira_client:     
+  base_url: https://ringrevenue.atlassian.net
+  username: development
+  # password must be stored in keychain. Create an entry matching the app_name
 ```
-rbenv local 1.9.3-p448
-bundle install
-```
+   
+ An example JIRA Base URL would look like: https://your-company.atlassian.net    
+ 
+##### Create an entry in the **Keychain Access** app
+ * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
+ * Account Name: &lt;jira username&gt; (must match what is in config.yml)
+ * Password: &lt;jira password&gt;
 
-Launch `irb` and then require main file
+**Note:** On first run of the app, you will get a prompt that "security" is requesting access to the 'jira-glue' entry. Click "always allow" to not be prompted for this every time you use the app (especially useful if triggered via hot key).
 
-```
-$ irb
-irb> require './lib/glue.rb'
-=> true
-```
+##### Setup Ruby and run bundle install (tested against Ruby 1.9.3)
 
-Now you can construct and use the Glue object
+    ```bash
+    rbenv local 1.9.3-p448
+    bundle install
+    rbenv rehash
+    ```
 
-```
-g = Glue.new
-```
+##### Test out the script directly
+ * Navigate in Chrome to a JIRA issue, filter, or search
+ * In terminal from the main directory of the repo:
+
+    ```
+    ruby browser-glue.rb
+    ```
 
 ### Launch from Hotkey
 
 * Use Automator (recommended), or Alfred with power pack or QuickSilver
-* Create a file called `secrets` next to browser-glue.rb
-
-    ```
-    ENV['jira_username'] = 'sample_user'
-    ENV['jira_password'] = 'p@ss'
-    ENV['jira_base_url'] = 'https://your-company.atlassian.net'
-    ```
 
 #### Using Automator
 * Launch "Automator"
 * Create new "Service"
 * Ensure that service receives 'no input' in 'any appliction'
 * For action, select "Run Shell Script"
-* Enter command: `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
+* Enter command to run script via rbenv, e.g.: `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
 * Save action with a descriptive name
 * Go to "Automator" menu, then "Services" > "Services Preferences"
 * Find the new action and click to add a shortcut key (I use CTRL-J for JIRA)
@@ -71,17 +70,6 @@ g = Glue.new
 * Searches for issue and calls issue_on_clipboard if active tab in Chrome is viewing a JIRA issue
 * Returns nil
 ```
-g = Glue.new
+g = Glue.new(YAML.load_file('config.yml'))
 g.issues_from_active_browser
-```
-
-#### Glue#issue_on_clipboard(jira_key)
-
-* Takes a JIRA issue ID (project key followed by number, e.g. WEB-120)
-* Sets HTML and text strings onto clipboard containing JIRA issue summary and link to issue
-  * E.g. "[WEB-120](http://www.example.com/issues/WEB-120): An example bug title"
-* Returns nil
-```
-g = Glue.new
-g.issue_on_clipboard("STORY-200")
 ```
