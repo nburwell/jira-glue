@@ -18,7 +18,8 @@ jira_client:
   # password must be stored in keychain. Create an entry matching the app_name
 ```
    
- An example JIRA Base URL would look like: https://your-company.atlassian.net    
+ * An example JIRA Base URL would look like: https://your-company.atlassian.net    
+ * If you typically log in via Google to JIRA, you will need to create a password for your username in JIRA (Go to Profile)
  
 ##### Create an entry in the **Keychain Access** app
  * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
@@ -29,11 +30,12 @@ jira_client:
 
 ##### Setup Ruby and run bundle install (tested against Ruby 1.9.3)
 
-    ```bash
-    rbenv local 1.9.3-p448
-    bundle install
-    rbenv rehash
-    ```
+```bash
+rbenv local 1.9.3-p448
+gem install bundler -v 1.5.3
+bundle install
+rbenv rehash
+```
 
 ##### Test out the script directly
  * Navigate in Chrome to a JIRA issue, filter, or search
