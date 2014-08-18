@@ -65,7 +65,7 @@ module JIRA
     
     def issue_description_and_link_from_issue(issue)
       summary = issue.fields['summary']
-      link    = "#{base_url}/issues/#{issue.key}"
+      link    = "#{base_url}/browse/#{issue.key}"
 
       [summary, link]
     end
@@ -84,5 +84,54 @@ module JIRA
         @notifier.show_message!("#{"#{context}\n" if context}#{ex.message}")
       end
     end
+    
+    ###########################
+    
+    public
+    
+    class Sprint
+
+      TEAMS = {
+        "Early Birds" => /early.?birds/i,
+        "Hurricane" => /hurricane/i,
+      }
+  
+      attr_accessor :jira_client, :id, :name
+
+      def initialize(jira_client, id, name)
+        @jira_client = jira_client
+        self.id = id
+        self.name = name
+      end
+
+      def issues
+        @jira_client.Issue.jql("sprint = #{id}")
+      end
+
+      def burndown_remaining
+        issues.map { |i| estimate_to_days((i.timeoriginalestimate || 0) - (i.timespent || 0)) }.inject(:+)
+      end
+
+      def self.all_active(client)
+        sprints = JSON.parse(client.get('/rest/greenhopper/latest/sprintquery/1').body)['sprints']
+        sprints.select { |sprint| sprint['state'] == 'ACTIVE' }
+      end
+
+      def self.team_sprints(client)
+        TEAMS.map { |team_name, team_regex|
+          team_sprint = Sprint.all_active(client).detect { |sprint| sprint['name'] =~ team_regex }
+          Sprint.new(client, team_sprint['id'], team_sprint['name'])
+        }
+      end
+
+      private
+
+      def estimate_to_days(estimate)
+        estimate ? estimate / (60.0 * 60 * 8) : 0
+      end
+
+    end
+    
   end
 end
+
