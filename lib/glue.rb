@@ -48,9 +48,11 @@ class Glue
   def issue_on_clipboard(issue)
     issue or return
     
-    summary, link = @jira.issue_description_and_link_from_issue(issue)
+    summary, link, impact = @jira.issue_description_and_link_from_issue(issue)
     
-    html = "<a href='#{link}'>#{issue.key}</a>: #{summary}"
+    impact_html = impact.blank? ? "<b>Not provided</b>" : impact
+    
+    html = "<a href='#{link}'>#{issue.key}</a>: #{summary}<br /><br /><i>Customer Impact:</i><br />#{impact_html}<br />"
     text = "#{issue.key}: #{summary}"
     
     Clipboard.insert!(html, text)

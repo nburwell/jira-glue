@@ -8,6 +8,8 @@ require 'jira'
 module JIRA
   class Wrapper
 
+    CUSTOMER_IMPACT_FIELD = "customfield_10100"
+    
     JIRA_CLIENT_OPTIONS = {
         :context_path    => "",
         :auth_type       => :basic,
@@ -67,7 +69,7 @@ module JIRA
       summary = issue.fields['summary']
       link    = "#{base_url}/browse/#{issue.key}"
 
-      [summary, link]
+      [summary, link, issue.fields[CUSTOMER_IMPACT_FIELD]]
     end
     
     def self.get_password(app_name, username)
