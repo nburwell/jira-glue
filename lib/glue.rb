@@ -11,7 +11,7 @@ class Glue
   def initialize(config)
     @notifier = Notifier.new(config["app"]["name"], config["app"]["title"])
     @jira     = JIRA::Wrapper.new(config, @notifier)
-    @browser  = Browser.new(:Chrome, @jira.base_url)
+    @browser  = Browser.new(config["browser"]["name"].to_sym || :Chrome, @jira.base_url)
   end
 
   def issues_from_active_browser

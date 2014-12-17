@@ -13,14 +13,16 @@ include Appscript
 
 class Browser
   def initialize(type, base_url)
-    case type
+    name = case type
     when :Chrome
       "Google Chrome"
+    when :Safari
+      "Safari"
     else
       raise "Unsupported browser type: #{type}"
     end
     
-    @browser  = app("Google Chrome")
+    @browser  = app(name)
     @base_url = base_url
   end
     
@@ -41,11 +43,20 @@ class Browser
       matches[1]
     end
   end
+
+  def is_safari?
+    @browser.name.get == "Safari"
+  end
   
   def get_url()
     if @browser && @browser.windows.first
+      # https://gist.github.com/vitorgalvao/5392178#file-get_title_and_url-applescript
       # windows.first is the front (active) window
-      @browser.windows.first.active_tab.URL.get
+      if is_safari?
+        @browser.documents.first.URL.get
+      else
+        @browser.windows.first.active_tab.URL.get
+      end
     end
   end
 end
