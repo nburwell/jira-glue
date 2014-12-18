@@ -8,19 +8,12 @@ include Appscript
 
 # Example usage
 # -------------
-# b = Browser.new(:Chrome)
+# b = Browser.new("Google Chrome")
 # b.jira_key_from_active_tab
 
 class Browser
-  def initialize(type, base_url)
-    name = case type
-    when :Chrome
-      "Google Chrome"
-    when :Safari
-      "Safari"
-    else
-      raise "Unsupported browser type: #{type}"
-    end
+  def initialize(name, base_url)
+    ["Google Chrome", "Safari"].include?(name) or raise "Unsupported browser: #{name}"
     
     @browser  = app(name)
     @base_url = base_url

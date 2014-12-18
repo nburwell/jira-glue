@@ -9,10 +9,10 @@ require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
   def initialize(config)
-    browser_name = config["browser"]["name"]
+    browser_name = config["browser"]["name"] || "Google Chrome"
     @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
     @jira     = JIRA::Wrapper.new(config, @notifier)
-    @browser  = Browser.new(browser_name.to_sym || :Chrome, @jira.base_url)
+    @browser  = Browser.new(browser_name, @jira.base_url)
   end
 
   def issues_from_active_browser
