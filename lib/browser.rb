@@ -51,10 +51,10 @@ class Browser
   def get_url()
     if @browser && @browser.windows.first
       # https://gist.github.com/vitorgalvao/5392178#file-get_title_and_url-applescript
-      # windows.first is the front (active) window
       if is_safari?
         @browser.documents.first.URL.get
       else
+        # windows.first is the front (active) window
         @browser.windows.first.active_tab.URL.get
       end
     end
