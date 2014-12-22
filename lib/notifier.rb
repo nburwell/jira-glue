@@ -3,20 +3,21 @@
 
 class Notifier
 
-  def initialize(app_name, app_title, browser_name)
+  def initialize(app_name, app_title, notification_app_name)
     @app_name  = app_name
     @app_title = app_title
-    @browser_name = browser_name
+    @notification_app_name = notification_app_name
   end
 
   def show_message!(message)
     terminal_notifier_command(message)
   end
-  
+
   private
-  
+
   def sender
-    if @browser_name == "Safari"
+    # TODO: Make the discovery of the name of notification app smarter.
+    if @notification_app_name == "Safari"
       'com.apple.Safari'
     else
       'com.google.Chrome'
