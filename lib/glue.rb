@@ -13,6 +13,11 @@ class Glue
     @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
     @jira     = JIRA::Wrapper.new(config, @notifier)
     @browser  = Browser.new(browser_name, @jira.base_url)
+
+    @impact = true # Backwards compatibility
+    if fields = config["fields"]
+      @impact = fields["impact"]
+    end
   end
 
   def issues_from_active_browser
@@ -51,9 +56,12 @@ class Glue
 
     summary, link, impact = @jira.issue_description_and_link_from_issue(issue)
 
-    impact_html = impact.blank? ? "<b>Not provided</b>" : impact
+    impact_html = if @impact
+                    inner_html = impact.blank? ? "<b>Not provided</b>" : impact
+                    "<br /><br /><i>Customer Impact:</i><br />#{inner_html}<br />"
+                  end
 
-    html = "<a href='#{link}'>#{issue.key}</a>: #{summary}<br /><br /><i>Customer Impact:</i><br />#{impact_html}<br />"
+    html = "<a href='#{link}'>#{issue.key}</a>: #{summary}#{impact_html}"
     text = "#{issue.key}: #{summary}"
 
     Clipboard.insert!(html, text)
