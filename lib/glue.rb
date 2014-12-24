@@ -9,9 +9,11 @@ require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
   def initialize(config)
-    @notifier = Notifier.new(config["app"]["name"], config["app"]["title"])
+    browser_name = (config["browser"] && config["browser"]["name"]) || "Google Chrome" # Optional with backwards compatibility
+    @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
     @jira     = JIRA::Wrapper.new(config, @notifier)
-    @browser  = Browser.new(:Chrome, @jira.base_url)
+    @browser  = Browser.new(browser_name, @jira.base_url)
+
     @impact = true # Backwards compatibility
     if fields = config["fields"]
       @impact = fields["impact"]

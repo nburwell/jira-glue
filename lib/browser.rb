@@ -8,19 +8,14 @@ include Appscript
 
 # Example usage
 # -------------
-# b = Browser.new(:Chrome)
+# b = Browser.new("Google Chrome")
 # b.jira_key_from_active_tab
 
 class Browser
-  def initialize(type, base_url)
-    case type
-    when :Chrome
-      "Google Chrome"
-    else
-      raise "Unsupported browser type: #{type}"
-    end
+  def initialize(name, base_url)
+    ["Google Chrome", "Safari"].include?(name) or raise "Unsupported browser: #{name}"
     
-    @browser  = app("Google Chrome")
+    @browser  = app(name)
     @base_url = base_url
   end
     
@@ -41,11 +36,20 @@ class Browser
       matches[1]
     end
   end
+
+  def is_safari?
+    @browser.name.get == "Safari"
+  end
   
   def get_url()
     if @browser && @browser.windows.first
-      # windows.first is the front (active) window
-      @browser.windows.first.active_tab.URL.get
+      # https://gist.github.com/vitorgalvao/5392178#file-get_title_and_url-applescript
+      if is_safari?
+        @browser.documents.first.URL.get
+      else
+        # windows.first is the front (active) window
+        @browser.windows.first.active_tab.URL.get
+      end
     end
   end
 end
