@@ -16,10 +16,15 @@ jira_client:
   base_url: https://ringrevenue.atlassian.net
   username: development
   # password must be stored in keychain. Create an entry matching the app_name
+  
+# optional (to use Safari)
+# browser:
+#  name: Safari
 ```
    
  * An example JIRA Base URL would look like: https://your-company.atlassian.net    
  * If you typically log in via Google to JIRA, you will need to create a password for your username in JIRA (Go to Profile)
+ * By default the script assumes Google Chrome (see above for how to specify a different browser in config file)
  
 ##### Create an entry in the **Keychain Access** app
  * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
