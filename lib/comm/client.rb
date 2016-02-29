@@ -1,6 +1,8 @@
 module Comm
   class Client
     
+    attr_accessor :debug
+    
     def initialize
       @send_pipe = "/tmp/glue.server.recv"
       @recv_pipe = "/tmp/glue.server.send"
@@ -17,7 +19,7 @@ module Comm
     private
     
     def log(message)
-      puts message
+      puts message if debug
     end
 
     def send_message(data)

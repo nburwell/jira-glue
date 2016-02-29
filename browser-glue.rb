@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'bundler'
 require File.expand_path('../lib/comm/client.rb',  __FILE__)
 
