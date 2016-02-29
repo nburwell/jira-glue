@@ -49,15 +49,15 @@ rbenv rehash
 #### Install server as a launchd process
 1. Copy sample plist file into LaunchAgents directory (edit path to rbenv and script)
 
-```
-cp sample-local.jira-glue.plist ~/Library/LaunchAgents/local.jira-glue.plist
-```
+  ```
+  cp sample-local.jira-glue.plist ~/Library/LaunchAgents/local.jira-glue.plist
+  ```
 
 2. Register the daemon (this should start it now, and on every computer restart)
 
-```
-launchctl load ~/Library/LaunchAgents/local.jira-glue.plist 
-```
+  ```
+  launchctl load ~/Library/LaunchAgents/local.jira-glue.plist 
+  ```
 
 #### Test out server and client
  * Navigate in Chrome to a JIRA issue, filter, or search
