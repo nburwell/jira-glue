@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>Label</key>
+<string>local.jira-glue</string>
+<key>RunAtLoad</key>
+<true/>
+<key>ProgramArguments</key>
+<array>
+    <string>sh</string>
+    <string>-c</string>
+    <string>/Users/Nick/.rbenv/shims/ruby /Users/Nick/software/jira-glue/server.rb</string>
+</array>
+<key>StandardErrorPath</key>
+<string>/tmp/jira-glue.err</string>
+<key>StandardOutPath</key>
+<string>/tmp/jira-glue.out</string>
+</dict>
+</plist>

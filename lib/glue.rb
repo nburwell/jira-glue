@@ -8,6 +8,8 @@ require File.expand_path('../clipboard.rb',  __FILE__)
 require File.expand_path('../browser.rb',  __FILE__)
 
 class Glue
+  attr_reader :jira
+  
   def initialize(config)
     browser_name = (config["browser"] && config["browser"]["name"]) || "Google Chrome" # Optional with backwards compatibility
     @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
@@ -46,7 +48,7 @@ class Glue
 
     html << '</ul><br />'
 
-    Clipboard.insert!(html, text)
+    Clipboard.insert!(html, text, text)
 
     # @notifier.show_message!("Added #{issues.count} issues to clipboard")
   end
@@ -63,9 +65,17 @@ class Glue
 
     html = "<a href='#{link}'>#{issue.key}</a>: #{summary}#{impact_html}"
     text = "#{issue.key}: #{summary}"
+    
+    slack_text = "#{issue.key}: #{summary}\n#{link}"
 
-    Clipboard.insert!(html, text)
+    Clipboard.insert!(html, text, slack_text)
 
     # @notifier.show_message!("Added #{issue.key} to clipboard")
+    
+    [summary, link, impact]
+  end
+  
+  def display_notification(message)
+    @notifier.show_message!(message)
   end
 end

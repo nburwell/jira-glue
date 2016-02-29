@@ -1,7 +1,7 @@
 JIRA Glue
 =========
 
-Command line utility app for JIRA tracking system
+Command line utility app for JIRA tracking system. Built as a simple client-server model so that the server can be set up once with JIRA credentials, then any local client script can easily connect and get JIRA information.
 
 ### Setup
 
@@ -15,18 +15,22 @@ app:
 jira_client:     
   base_url: https://ringrevenue.atlassian.net
   username: development
-  # password must be stored in keychain. Create an entry matching the app_name
-  
+  # password must be stored in following places:
+  #  * ENV variable (use JIRA_PASSWORD)
+  #  * keychain (create an entry matching the app_name above)
+
 # optional (to use Safari)
 # browser:
-#  name: Safari
+#   name: Safari
 ```
-   
+
  * An example JIRA Base URL would look like: https://your-company.atlassian.net    
  * If you typically log in via Google to JIRA, you will need to create a password for your username in JIRA (Go to Profile)
  * By default the script assumes Google Chrome (see above for how to specify a different browser in config file)
  
-##### Create an entry in the **Keychain Access** app
+##### If using Keychain for password:
+Create an entry in the **Keychain Access** app
+
  * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
  * Account Name: &lt;jira username&gt; (must match what is in config.yml)
  * Password: &lt;jira password&gt;
@@ -50,7 +54,7 @@ rbenv rehash
     ruby browser-glue.rb
     ```
 
-### Launch from Hotkey
+### Launch client from Hotkey
 
 * Use Automator (recommended), or Alfred with power pack or QuickSilver
 
@@ -72,11 +76,26 @@ rbenv rehash
 
 ### Documentation
 
-#### Glue#issues_from_active_browser
+#### Get description(s) & link(s) from Browser
 
-* Searches for issue and calls issue_on_clipboard if active tab in Chrome is viewing a JIRA issue
-* Returns nil
+* Searches for the currently viewed issue and puts the issue (with description and link) on to the clipboard
+* Supports viewing a filter or custom JQL too and will create a bulleted list of issues and their descriptions/links
+* Looks for active tab in Chrome by default, can search Safari instead (in config.yml)
+
 ```
-g = Glue.new(YAML.load_file('config.yml'))
-g.issues_from_active_browser
+ruby ./input.rb
+
+# paste in JIRA keys, one line at a time
 ```
+
+
+#### Get descriptions & links from pasting input
+
+* Searches for all issues and puts a bulleted list of linked issues (with their descriptions) on to the clipboard
+
+```
+ruby ./input.rb
+
+# paste in JIRA keys, one line at a time
+```
+

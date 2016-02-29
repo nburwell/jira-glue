@@ -73,8 +73,8 @@ module JIRA
     end
     
     def self.get_password(app_name, username)
-      `security 2>&1 >/dev/null find-generic-password -g -l '#{app_name}' -a #{username} \
-       |ruby -e 'print $1 if STDIN.gets =~ /^password: "(.*)"$/'`
+      response = ENV["JIRA_PASSWORD"] || `security find-generic-password -w -l '#{app_name}' -a #{username}`.to_s.strip
+      response.to_s.empty? ? nil : response
     end
 
     private

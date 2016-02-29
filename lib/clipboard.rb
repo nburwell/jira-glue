@@ -11,11 +11,12 @@ require 'pasteboard'
 #                   'WEB-600: IE bug somewhere probably')
 
 class Clipboard
-  def self.insert!(html, plain_text)
+  def self.insert!(html, plain_text, slack_text)
     pasteboard = Pasteboard.new
 
     item = [
       [Pasteboard::Type::HTML,                   html],
+      [Pasteboard::Type::TEXT_MULTIMEDIA_DATA,   slack_text],
       [Pasteboard::Type::PLAIN_TEXT_TRADITIONAL, plain_text]
     ]
 
