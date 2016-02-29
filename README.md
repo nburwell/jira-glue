@@ -15,7 +15,7 @@ app:
 jira_client:     
   base_url: https://ringrevenue.atlassian.net
   username: development
-  # password must be stored in following places:
+  # password must be stored in one of the following places:
   #  * ENV variable (use JIRA_PASSWORD)
   #  * keychain (create an entry matching the app_name above)
 
@@ -46,13 +46,43 @@ bundle install
 rbenv rehash
 ```
 
-##### Test out the script directly
+#### Install server as a launchd process
+1. Copy sample plist file into LaunchAgents directory (edit path to rbenv and script)
+
+```
+cp sample-local.jira-glue.plist ~/Library/LaunchAgents/local.jira-glue.plist
+```
+
+2. Register the daemon (this should start it now, and on every computer restart)
+
+```
+launchctl load ~/Library/LaunchAgents/local.jira-glue.plist 
+```
+
+#### Test out server and client
  * Navigate in Chrome to a JIRA issue, filter, or search
  * In terminal from the main directory of the repo:
 
     ```
     ruby browser-glue.rb
     ```
+
+* Success is having the client print out a response, and the JIRA key and description will be on your clipboard
+* Failure modes: 
+  * If credentials are wrong, you will see a notification
+  * If browser tab does not contain a JIRA issue or filter, you will see a notification
+  * If jira-glue server is not running correctly, you will not get a response from the ruby client script
+
+##### Debug
+
+* Tail the error and standard output from the launchd process to confirm it's running and with no errors:
+
+```
+tail -F /tmp/jira-glue.*
+```
+
+* If it's not running, make sure the launchd steps were followed correctly. Also check the "Console" app for errors regarding `jira-glue`
+
 
 ### Launch client from Hotkey
 
@@ -83,9 +113,8 @@ rbenv rehash
 * Looks for active tab in Chrome by default, can search Safari instead (in config.yml)
 
 ```
-ruby ./input.rb
-
-# paste in JIRA keys, one line at a time
+ruby ./browser-glue.rb
+# will run automatically and exit
 ```
 
 
@@ -95,7 +124,6 @@ ruby ./input.rb
 
 ```
 ruby ./input.rb
-
 # paste in JIRA keys, one line at a time
 ```
 
