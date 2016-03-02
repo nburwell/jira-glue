@@ -9,7 +9,7 @@ GEM
       tzinfo (~> 0.3.37)
     atomic (1.1.14)
     i18n (0.6.9)
-    jira-ruby (0.1.8)
+    jira-ruby (0.1.17)
       activesupport
       oauth
     minitest (4.7.5)
@@ -26,7 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  jira-ruby
+  jira-ruby (= 0.1.17)
   pasteboard
   rb-appscript
   terminal-notifier (= 1.5.1)

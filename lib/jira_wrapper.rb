@@ -43,7 +43,7 @@ module JIRA
     
     def issues_from_jql(jql)
       begin
-        @jira_client.Issue.jql(jql)
+        @jira_client.Issue.jql(jql, { max_results: 100})
       rescue JIRA::HTTPError => ex
         handle_jira_error(ex, "Unable to get issues from jql: #{jql}")
         nil
