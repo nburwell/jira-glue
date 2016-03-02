@@ -24,7 +24,7 @@ server.start do |message|
 
     begin
       g.issues_from_active_browser
-      server.send("On clipboard")
+      server.send("HTML on clipboard")
     rescue => ex
       g.display_notification(ex.message)
       server.send("An error occurred: #{ex.message}")
@@ -36,7 +36,7 @@ server.start do |message|
 
     begin
       g.issues_on_clipboard(g.jira.issues_from_jql(jql))
-      server.send("On clipboard")
+      server.send("HTML on clipboard")
     rescue => ex
       server.send("An error occurred: #{ex.message}")
     end
