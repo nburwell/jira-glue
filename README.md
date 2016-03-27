@@ -17,11 +17,8 @@ app:
   title: JIRA glue
 
 jira_client:     
-  base_url: https://ringrevenue.atlassian.net
-  username: development
-  # password must be stored in one of the following places:
-  #  * ENV variable (use JIRA_PASSWORD)
-  #  * keychain (create an entry matching the app_name above)
+  base_url: https://your-company.atlassian.net
+  # authentication params
 
 fields:
   impact: false
@@ -31,11 +28,41 @@ fields:
 #   name: Safari
 ```
 
- * An example JIRA Base URL would look like: https://your-company.atlassian.net    
- * *If you typically log in via Google to JIRA*, you will need to create a password for your username in JIRA (Go to Profile within JIRA and set / change your password)
- * By default the script assumes Google Chrome (see above for how to specify a different browser in config file)
- 
-##### If using Keychain for password:
+##### Get Oauth Credentials
+
+To authenticate to the JIRA API via Oauth, you will need to get an access token and key from JIRA.  You will then store these locally in the config.yml file (alternatively you can use environment variables, see below).
+
+Oauth Token Generator: https://jira-glue.herokuapp.com/
+
+Paste the provided key/values into the `config.yml`:
+
+```yaml
+app:
+  name: jira-glue
+  title: JIRA glue
+
+jira_client:     
+  # ---- PASTE OAUTH CREDENTIALS FROM GENERATOR HERE: ----
+  base_url: https://your-company.atlassian.net
+  consumer_key: '...'
+  access_token: '...'
+  access_key: '...'
+
+fields:
+  impact: false
+```
+
+###### Alternate Authentication
+
+You can also use basic authentication with your JIRA username & password. The password is not supported within the config file, but can be provided in the following two ways:
+
+* Environmental variable of `JIRA_PASSWORD`
+* In the Mac OS X Keychain
+
+ * *If you typically log in via Google to JIRA*, you should definitely consider using Oauth, otherwise you will need to create a password for your username in JIRA (Go to Profile within JIRA and set / change your password)
+
+
+**If using Keychain for password:**
 Create an entry in the **Keychain Access** app
 
  * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
@@ -43,6 +70,22 @@ Create an entry in the **Keychain Access** app
  * Password: &lt;jira password&gt;
 
 **Note:** On first run of the app, you will get a prompt that "security" is requesting access to the 'jira-glue' entry. Click "always allow" to not be prompted for this every time you use the app (especially useful if setup as a daemon process or triggered via hot key, etc).
+
+In either case, the `config.yml` should look similar to below, with your JIRA username filled in:
+
+```yaml
+app:
+  name: jira-glue
+  title: JIRA glue
+
+jira_client:     
+  base_url: https://your-company.atlassian.net
+  auth_type: basic
+  username: '...'_
+
+fields:
+  impact: false
+```
 
 ##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
 
@@ -58,7 +101,7 @@ rbenv rehash
 ruby demo.rb
 ```
 
-* If you run into authentication errors, ensure you can log into JIRA via the web, using the username in the config file, and the password in your keychain or ENV var.
+* If you run into authentication errors, try `ruby test.rb` for a simpler script with more debug output.
 
 #### Optional Setup
 If you want to have a single process running that stores the credentials and does the heavy-lifting for JIRA access, you can set up a launchd controlled process that acts as the server, and there is a preconfigured "browser-glue.rb" that can act as the client and be attached to a keyboard shortcut via Automator.
@@ -104,6 +147,7 @@ tail -F /tmp/jira-glue.*
 ##### Launch client from Hotkey
 
 * Use Automator (recommended), or Alfred with power pack or QuickSilver
+* By default the script uses Google Chrome for the browser integration (see examples for how to specify a different browser in config file)
 
 ###### Using Automator
 * Launch "Automator"
@@ -130,7 +174,7 @@ require 'yaml'
 require "lib/jira_glue.rb"
 
 # load config
-config = YAML.load_file("config.yml")
+config = YAML.load(ERB.new(File.read("config.yml")))
 glue = Glue.new(config)
 ```
 
@@ -148,7 +192,7 @@ require 'yaml'
 require "lib/jira_wrapper.rb"
 
 # load config
-config = YAML.load_file("config.yml")
+config = YAML.load(ERB.new(File.read("config.yml")))
 
 # set up a notifier interface, must define "show_message!"
 class Notifier

@@ -12,13 +12,12 @@ module JIRA
     
     JIRA_CLIENT_OPTIONS = {
         :context_path    => "",
-        :auth_type       => :basic,
         :use_ssl         => true
     }
 
     attr_reader :base_url
     
-    def initialize(config, notifier)
+    def initialize(config, notifier, debug: false)
       client_options            = JIRA_CLIENT_OPTIONS.dup
             
       @app_name                 = config["app"]["name"]
@@ -26,10 +25,31 @@ module JIRA
       @notifier                 = notifier
 
       client_options[:site]     = @base_url
-      client_options[:username] = config["jira_client"]["username"]                                     or raise "jira_client['username'] not set in config"
-      client_options[:password] = self.class.get_password(@app_name, config["jira_client"]["username"]) or raise "jira_client['password'] not found / not accessible in keychain"
-
-      @jira_client = JIRA::Client.new(client_options)
+      
+      if config["jira_client"]["auth_type"] == :basic
+        client_options[:auth_type] = :basic
+        client_options[:username] = config["jira_client"]["username"]                                     or raise "jira_client['username'] not set in config"
+        client_options[:password] = self.class.get_password(@app_name, config["jira_client"]["username"]) or raise "jira_client['password'] not found / not accessible in keychain"
+        
+        @jira_client = JIRA::Client.new(client_options)
+      else
+        client_options[:signature_method] = 'RSA-SHA1'
+        client_options[:consumer_key] = config["jira_client"]["consumer_key"]
+        
+        @jira_client = JIRA::Client.new(client_options)
+        
+        access_token = config["jira_client"]["access_token"] or raise "jira_client['access_token'] not set in config, and not using basic auth"
+        access_key   = config["jira_client"]["access_key"]   or raise "jira_client['access_key'] not set in config, and not using basic auth"
+        
+        @jira_client.set_access_token(access_token, access_key)
+        
+        if debug
+          puts "Consumer: #{client_options[:consumer_key]}"
+          puts "Token: #{access_token}"
+          puts "Key: #{access_key}"
+          @jira_client.consumer.http.set_debug_output($stderr)
+        end
+      end
     end
     
     def find_issue(key)
