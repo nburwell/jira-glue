@@ -32,7 +32,7 @@ fields:
 
 To authenticate to the JIRA API via Oauth, you will need to get an access token and key from JIRA.  You will then store these locally in the config.yml file (alternatively you can use environment variables with ERB substitution, see below).
 
-Oauth Token Generator: https://jira-glue.herokuapp.com/
+Oauth Token Generator for Invoca Instance: https://jira-glue.herokuapp.com/
 
 Paste the provided key/values into the `config.yml`:
 
@@ -51,6 +51,9 @@ jira_client:
 fields:
   impact: false
 ```
+
+* Save private key that was used to generate the Application Link in JIRA to `rsakey.pem` in the root folder
+  * (Can be found in LastPass under Jira Glue)
 
 
 [https://github.com/nburwell/jira-glue/wiki/Authentication](View other Authentication options)
