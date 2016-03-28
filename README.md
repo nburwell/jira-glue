@@ -73,9 +73,9 @@ ruby demo.rb
 
 #### Optional Setup
 
-Visit the [https://github.com/nburwell/jira-glue/wiki/Launchd-server-client-setup](Launchd server client setup) wiki page if you are interested in setting up a launchd process that makes global hotkey automation easy.
+Visit the [Launchd server client setup](https://github.com/nburwell/jira-glue/wiki/Launchd-server-client-setup) wiki page if you are interested in setting up a launchd process that makes global hotkey automation easy.
 
-Set up [https://github.com/nburwell/jira-glue/wiki/Setup-Global-Hotkeys-(Mac)](global hotkeys using Automator or other Mac solutions) for quick access to JIRA ticket information on the clipboard.
+Set up [global hotkeys using Automator or other Mac solutions](https://github.com/nburwell/jira-glue/wiki/Setup-Global-Hotkeys-(Mac)) for quick access to JIRA ticket information on the clipboard.
 
 ### Documentation
 
