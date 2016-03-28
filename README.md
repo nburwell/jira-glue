@@ -30,7 +30,7 @@ fields:
 
 ##### Get Oauth Credentials
 
-To authenticate to the JIRA API via Oauth, you will need to get an access token and key from JIRA.  You will then store these locally in the config.yml file (alternatively you can use environment variables, see below).
+To authenticate to the JIRA API via Oauth, you will need to get an access token and key from JIRA.  You will then store these locally in the config.yml file (alternatively you can use environment variables with ERB substitution, see below).
 
 Oauth Token Generator: https://jira-glue.herokuapp.com/
 
@@ -52,40 +52,8 @@ fields:
   impact: false
 ```
 
-###### Alternate Authentication
 
-You can also use basic authentication with your JIRA username & password. The password is not supported within the config file, but can be provided in the following two ways:
-
-* Environmental variable of `JIRA_PASSWORD`
-* In the Mac OS X Keychain
-
- * *If you typically log in via Google to JIRA*, you should definitely consider using Oauth, otherwise you will need to create a password for your username in JIRA (Go to Profile within JIRA and set / change your password)
-
-
-**If using Keychain for password:**
-Create an entry in the **Keychain Access** app
-
- * Keychain Item Name: 'jira-glue' (must mach app[name] in config.yml)
- * Account Name: &lt;jira username&gt; (must match what is in config.yml)
- * Password: &lt;jira password&gt;
-
-**Note:** On first run of the app, you will get a prompt that "security" is requesting access to the 'jira-glue' entry. Click "always allow" to not be prompted for this every time you use the app (especially useful if setup as a daemon process or triggered via hot key, etc).
-
-In either case, the `config.yml` should look similar to below, with your JIRA username filled in:
-
-```yaml
-app:
-  name: jira-glue
-  title: JIRA glue
-
-jira_client:     
-  base_url: https://your-company.atlassian.net
-  auth_type: basic
-  username: '...'_
-
-fields:
-  impact: false
-```
+[https://github.com/nburwell/jira-glue/wiki/Authentication](View other Authentication options)
 
 ##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
 
@@ -104,66 +72,10 @@ ruby demo.rb
 * If you run into authentication errors, try `ruby test.rb` for a simpler script with more debug output.
 
 #### Optional Setup
-If you want to have a single process running that stores the credentials and does the heavy-lifting for JIRA access, you can set up a launchd controlled process that acts as the server, and there is a preconfigured "browser-glue.rb" that can act as the client and be attached to a keyboard shortcut via Automator.
 
-##### Install server as a launchd process
-1. Copy sample plist file into LaunchAgents directory (edit path to rbenv and script)
+Visit the [https://github.com/nburwell/jira-glue/wiki/Launchd-server-client-setup](Launchd server client setup) wiki page if you are interested in setting up a launchd process that makes global hotkey automation easy.
 
-  ```
-  cp sample-local.jira-glue.plist ~/Library/LaunchAgents/local.jira-glue.plist
-  ```
-
-2. Register the daemon (this should start it now, and on every computer restart)
-
-  ```
-  launchctl load ~/Library/LaunchAgents/local.jira-glue.plist 
-  ```
-
-##### Test out server and client
- * Navigate in Chrome to a JIRA issue, filter, or search
- * In terminal from the main directory of the repo:
-
-    ```
-    ruby browser-glue.rb
-    ```
-
-* Success is having the client print out a response, and the JIRA key and description will be on your clipboard
-* Failure modes: 
-  * If credentials are wrong, you will see a notification
-  * If browser tab does not contain a JIRA issue or filter, you will see a notification
-  * If jira-glue server is not running correctly, you will not get a response from the ruby client script
-
-##### Debug
-
-* Tail the error and standard output from the launchd process to confirm it's running and with no errors:
-
-```
-tail -F /tmp/jira-glue.*
-```
-
-* If it's not running, make sure the launchd steps were followed correctly. Also check the "Console" app for errors regarding `jira-glue`
-
-
-##### Launch client from Hotkey
-
-* Use Automator (recommended), or Alfred with power pack or QuickSilver
-* By default the script uses Google Chrome for the browser integration (see examples for how to specify a different browser in config file)
-
-###### Using Automator
-* Launch "Automator"
-* Create new "Service"
-* Ensure that service receives 'no input' in 'any appliction'
-* For action, select "Run Shell Script"
-* Enter command to run script via rbenv, e.g.: `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
-* Save action with a descriptive name
-* Go to "Automator" menu, then "Services" > "Services Preferences"
-* Find the new action and click to add a shortcut key (I use CTRL-J for JIRA)
-
-###### Using Alfred, Quicksilver, etc
-* Follow application-specific instructions to run a custom script based on a keyboard shortcut
-* Run the file `browser-glue.rb` ensuring that correct Ruby version and Gems are picked up
-  * E.g. `/Users/<username>/.rbenv/shims/ruby /Users/<username>/software/jira-glue/browser-glue.rb`
-* Tip: if using Terminal, you may want to go to "Preferences" > Settings > Default profile > Shell and select "Close if the shell exited cleanly" under "When shell exits"
+Set up [https://github.com/nburwell/jira-glue/wiki/Setup-Global-Hotkeys-(Mac)](global hotkeys using Automator or other Mac solutions) for quick access to JIRA ticket information on the clipboard.
 
 ### Documentation
 
