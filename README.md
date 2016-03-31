@@ -56,7 +56,7 @@ fields:
   * (Can be found in LastPass under Jira Glue)
 
 
-[https://github.com/nburwell/jira-glue/wiki/Authentication](View other Authentication options)
+[View other Authentication options](https://github.com/nburwell/jira-glue/wiki/Authentication)
 
 ##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
 
