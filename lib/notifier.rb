@@ -25,7 +25,7 @@ class Notifier
   end
 
   def terminal_notifier_command(message)
-    cmd = "terminal-notifier -title '#{@app_title}' -message '#{message}' -sender #{sender} -group '#{@app_name}'"
+    cmd = "terminal-notifier -title '#{@app_title}' -message '#{message}' -sender #{sender} -group '#{@app_name}' > /dev/null"
     system(cmd)
   end
 end

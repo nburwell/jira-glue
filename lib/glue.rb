@@ -25,12 +25,16 @@ class Glue
   def issues_from_active_browser
     if key = @browser.jira_key_from_active_tab
       issue_on_clipboard(@jira.find_issue(key))
+      true
     elsif jql = @browser.jira_search_from_active_tab
       issues_on_clipboard(@jira.issues_from_jql(jql))
+      true
     elsif filter = @browser.jira_filter_from_active_tab
       issues_on_clipboard(@jira.issues_from_filter(filter))
+      true
     else
       @notifier.show_message!("No issue found from active browser")
+      false
     end
   end
 
