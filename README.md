@@ -3,9 +3,17 @@ JIRA Glue
 
 Command line utility app for JIRA tracking system. 
 
+Wraps the ruby JIRA API with the ability to:
+* Get the issue(s) being viewed in the active browser tab and put on the clipboard in a nicely formatted way (convenient when wired to a global hotkey!)
+* Using the command line interface:
+  * Get a single issue from browser or user input
+  * Get all issues from a filter ID
+  * Get all issues from a JQL query
+* With the provided classes, can easily build cool integrations or automated tasks around JIRA issues ana their owners, statuses, etc
+
 Has support for a simple client-server model so that the server can be set up once with JIRA credentials, then any local client script (such as a keyboard shortcut via Automator) can easily connect and get JIRA information.
 
-In order to use any part of jira-glue or the handy jira-wrapper class, there is some one time setup needed. The client-server configuration is optional, additional setup.
+In order to use any part of jira-glue or the handy jira-wrapper class, there is some one time setup needed. The client-server configuration is optional, with additional setup.
 
 ### One time setup
 
