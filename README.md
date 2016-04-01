@@ -9,7 +9,7 @@ Wraps the ruby JIRA API with the ability to:
   * Get a single issue from browser or user input
   * Get all issues from a filter ID
   * Get all issues from a JQL query
-* With the provided classes, can easily build cool integrations or automated tasks around JIRA issues ana their owners, statuses, etc
+* With the provided classes, can easily build cool integrations or automated tasks around JIRA issues and their owners, statuses, etc
 
 Has support for a simple client-server model so that the server can be set up once with JIRA credentials, then any local client script (such as a keyboard shortcut via Automator) can easily connect and get JIRA information.
 
