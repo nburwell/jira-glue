@@ -18,7 +18,7 @@ app:
 
 jira_client:     
   base_url: https://your-company.atlassian.net
-  # authentication params
+  # authentication params (see readme)
 
 fields:
   impact: false
@@ -30,11 +30,9 @@ fields:
 
 ##### Get Oauth Credentials
 
-To authenticate to the JIRA API via Oauth, you will need to get an access token and key from JIRA.  You will then store these locally in the config.yml file (alternatively you can use environment variables with ERB substitution, see below).
+To authenticate to the JIRA API via Oauth, you will need to have an OAuth app configured on your JIRA instance (in the Application Links section), and you will then provide in the config.yml the consumer_key (App specific), access_token and access_key (user specific). This assumes you can already generate Oauth tokens on a user's behalf with that consumer_key as well.
 
-Oauth Token Generator for Invoca Instance: https://jira-glue.herokuapp.com/
-
-1) Paste the provided key/values into the `config.yml`:
+1) Provide the required key/values in the `config.yml` under `jira_client`:
 
 ```yaml
 app:
@@ -52,17 +50,14 @@ fields:
   impact: false
 ```
 
-2) Save private key that was used to generate the Application Link in JIRA to `rsakey.pem` in the root folder
-  * (Can be found in LastPass under Jira Glue)
+2) Save the private key that was used when setting up the app in JIRA's Application Link to `rsakey.pem` in the root folder
+  * This is gitignored by default, do not check this into any public repos
 
-
-[View other Authentication options](https://github.com/nburwell/jira-glue/wiki/Authentication)
+[View other Authentication options, including user & password](https://github.com/nburwell/jira-glue/wiki/Authentication)
 
 ##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
 
 ```bash
-rbenv local 2.1.2
-gem install bundler -v 1.5.3  # tested against this version, likely newer versions also work
 bundle install
 rbenv rehash
 ```
