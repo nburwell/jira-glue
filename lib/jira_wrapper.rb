@@ -57,7 +57,7 @@ module JIRA
         issue = @jira_client.Issue.find(key)
       rescue JIRA::HTTPError => ex
         handle_jira_error(ex)
-        nil
+        raise ex
       end
     end
     
@@ -66,7 +66,7 @@ module JIRA
         @jira_client.Issue.jql(jql, { max_results: 100})
       rescue JIRA::HTTPError => ex
         handle_jira_error(ex, "Unable to get issues from jql: #{jql}")
-        nil
+        raise ex
       end
     end
     
@@ -81,7 +81,7 @@ module JIRA
         end
       rescue JIRA::HTTPError => ex
         handle_jira_error(ex, "Unable to get issues from filter: #{filter_id}")
-        nil
+        raise ex
       end
     end
     
