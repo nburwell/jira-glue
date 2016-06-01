@@ -70,6 +70,11 @@ bundle install
 rbenv rehash
 ```
 
+If you run into problems getting the pasteboard gem and you are on OS X, you may need the command line developer tools installed:
+```
+xcode-select --install
+```
+
 ##### Test it out!
 ```
 ruby demo.rb
