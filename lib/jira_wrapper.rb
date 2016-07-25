@@ -3,7 +3,7 @@
 
 require 'bundler'
 require 'net/https'
-require 'jira'
+require 'jira-ruby'
 
 module JIRA
   class Wrapper
