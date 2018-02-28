@@ -2,7 +2,7 @@
 #! /usr/bin/ruby
 
 require 'rubygems'
-require 'appscript'
+require 'rb-scpt'
 
 include Appscript
 
@@ -14,23 +14,23 @@ include Appscript
 class Browser
   def initialize(name, base_url)
     ["Google Chrome", "Safari"].include?(name) or raise "Unsupported browser: #{name}"
-    
+
     @browser  = app(name)
     @base_url = base_url
   end
-    
+
   def jira_key_from_active_tab()
     if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/browse\/([^?]*)/)
       matches[1]
     end
   end
-  
+
   def jira_search_from_active_tab()
     if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/issues\/\?jql=([^=]*)/)
       CGI::unescape(matches[1])
     end
   end
-  
+
   def jira_filter_from_active_tab()
     if matches = get_url.match(/#{@base_url.sub(/https?:\/\//, '')}\/issues\/\?filter=([^=]*)/)
       matches[1]
@@ -40,7 +40,7 @@ class Browser
   def is_safari?
     @browser.name.get == "Safari"
   end
-  
+
   def get_url()
     if @browser && @browser.windows.first
       # https://gist.github.com/vitorgalvao/5392178#file-get_title_and_url-applescript
