@@ -155,7 +155,7 @@ This assumes you have done the optional setup to get a server daemon running.
 * Looks for active tab in Chrome by default, can search Safari instead (in config.yml)
 
 ```
-ruby ./browser-glue.rb
+ruby ./browser.rb
 # will run automatically and exit
 ```
 
