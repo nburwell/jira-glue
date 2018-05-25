@@ -26,7 +26,7 @@ module JIRA
 
       client_options[:site]     = @base_url
       
-      if config["jira_client"]["auth_type"] == :basic
+      if config["jira_client"]["auth_type"] == "basic"
         client_options[:auth_type] = :basic
         client_options[:username] = config["jira_client"]["username"]                                     or raise "jira_client['username'] not set in config"
         client_options[:password] = self.class.get_password(@app_name, config["jira_client"]["username"]) or raise "jira_client['password'] not found / not accessible in keychain"
