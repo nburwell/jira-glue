@@ -12,6 +12,9 @@ class Glue
   
   def initialize(config)
     browser_name = (config["browser"] && config["browser"]["name"]) || "Google Chrome" # Optional with backwards compatibility
+
+    config && config["app"] or raise "config file is not setup correctly: it is missing the 'app' key. See README for setup instructions"
+
     @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
     @jira     = JIRA::Wrapper.new(config, @notifier)
     @browser  = Browser.new(browser_name, @jira.base_url)
@@ -89,3 +92,4 @@ class Glue
     @notifier.show_message!(message)
   end
 end
+
