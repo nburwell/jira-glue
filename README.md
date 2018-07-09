@@ -168,3 +168,6 @@ ruby ./input.rb
 # paste in JIRA keys, one line at a time
 ```
 
+#### Potential bundle issues
+
+As of `2018-07-09` (YYYY-MM-DD), `bundle install` fails due to `scpt-1.0.2` on ruby version `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-darwin17]`. This issue should be resolved in the future once a new gem version is released, but meanwhile the issue can be fixed manually by telling the Gemfile to pull from the `develop` branch of `https://github.com/BrendanThompson/rb-scpt`. See `https://github.com/nburwell/jira-glue/tree/fix_rb-scpt-1.0.2_breaks` for an updated Gemfile that includes this change. [Note: Since this fix should be temporary, the Gemfile in master was left as it was]
