@@ -11,8 +11,6 @@ input_array = ARGV
 
 if input_array.any?
   key = input_array[0]
-
-  puts input_array
   copy_to_clip_board = input_array.include? '-c'
   issue = g.jira.find_issue(key)
 
