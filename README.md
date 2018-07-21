@@ -171,10 +171,22 @@ ruby ./input.rb
 #### Build a Git Branch name from a Jira Issue
 The file branch_name.rb can be used to create a git branch name from a Jira issue.
 
-The name is made from the current year and month, followed by the jira issue key followed by the 
+The name is created using the current year and month, followed by the jira issue key followed by the 
 summary/description with most non-alphanumeric characters and spaces turned to underscores.
 
-Example:
+##### Example Branch Name:
+
+Given the following:
+* Current Date: July 4th 2018 (07/04/18)
+* Jira Issue Number: STORY-123
+* Jira Issue Description: Fix Jira-glue bug
+
+The branch name would be the following:
+```
+1807/STORY-123_fix_jira_glue_bug
+```
+
+##### Sample Output:
 ```
 ruby ./branch_name.rb STORY-123
 YYMM/STORY-123_jira_issue_description
@@ -182,5 +194,4 @@ YYMM/STORY-123_jira_issue_description
 Use the -c flag after the jira issue to have the branch name copied to your clipboard.
 ```
 ruby ./branch_name.rb STORY-123 -c
-YYMM/STORY-123_jira_issue_description
 ```
