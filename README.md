@@ -63,7 +63,7 @@ fields:
 
 [View other Authentication options, including user & password](https://github.com/nburwell/jira-glue/wiki/Authentication)
 
-##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
+##### Setup Ruby and run bundle install (tested against Ruby 1.9.3, 2.1.2, and 2.4.2)
 
 ```bash
 bundle install
@@ -167,4 +167,3 @@ ruby ./browser.rb
 ruby ./input.rb
 # paste in JIRA keys, one line at a time
 ```
-
