@@ -78,13 +78,10 @@ class Glue
 
     html = "<a href='#{link}'>#{issue.key}</a>: #{summary}#{impact_html}"
     text = "#{issue.key}: #{summary}"
-
     slack_text = "#{issue.key}: #{summary}\n#{link}"
-
     Clipboard.insert!(html, text, slack_text)
 
     # @notifier.show_message!("Added #{issue.key} to clipboard")
-
     [summary, link, impact]
   end
 
@@ -92,10 +89,12 @@ class Glue
     issue or return
 
     summary, = @jira.issue_description_and_link_from_issue(issue)
-    # Formatting: downcase -> replace specific non-alphanumeric with spaces -> remove non-alphanumberic chars -> replace spaces with join
+
+    # Formatting: downcase -> replace specific non-alphanumeric characters with spaces -> remove non-alphanumberic characters -> replace spaces with join
     summary_formatted = summary.downcase.tr(':;()-.', ' ').gsub(/[^a-z0-9\s&]/, '').split(' ').join('_')
-    month             = Date.today.month > 10 ? Date.today.month : "0#{Date.today.month}"
-    date              = "#{Date.today.year % 100}#{month}"
+    month             = Date.today.month
+    month_formatted   = month > 9 ? month : "0#{month}"
+    date              = "#{Date.today.year % 100}#{month_formatted}"
     branch_name       = "#{date}/#{issue.key}_#{summary_formatted}"
 
     Clipboard.insert_branch!(branch_name) if copy_to_clipboard

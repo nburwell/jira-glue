@@ -2,9 +2,9 @@
 
 require 'bundler'
 require 'yaml'
-require File.expand_path('../lib/glue.rb',  __FILE__)
+require File.expand_path('../lib/glue.rb', __FILE__)
 
-config = YAML.load(ERB.new(File.read(File.expand_path('../config.yml',  __FILE__))).result)
+config = YAML.load(ERB.new(File.read(File.expand_path('../config.yml', __FILE__))).result)
 g = Glue.new(config)
 
 input_array = ARGV
