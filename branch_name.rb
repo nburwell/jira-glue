@@ -12,7 +12,13 @@ input_array = ARGV
 if input_array.any?
   key = input_array[0]
   copy_to_clip_board = input_array.include? '-c'
-  issue = g.jira.find_issue(key)
+  begin
+    issue = g.jira.find_issue(key)
+  rescue JIRA::HTTPError => ex
+    STDERR.puts "#{ex} #{ex.response}: #{ex.message}"
+    # Exit 2 for bash script
+    exit 2
+  end
 
   puts g.build_branch_name_from_issue(issue, copy_to_clip_board) if issue
 end
