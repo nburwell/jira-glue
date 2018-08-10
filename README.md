@@ -207,8 +207,8 @@ prefix:
     date_format: "your_date_format_here"
 ```
 
-See the following article for information on date format strings:
-https://apidock.com/ruby/DateTime/strftime
+See the following article for information on date/time format strings:
+https://ruby-doc.org/core-2.4.0/Time.html#method-i-strftime
 
 ##### Example with a prefix:
 First set the date_format in config.yml
