@@ -23,11 +23,9 @@ class Clipboard
     pasteboard.put item
   end
 
-  def self.insert_branch!(branch_name)
+  def self.insert_text!(text)
     pasteboard = Pasteboard.new
 
-    name = [[Pasteboard::Type::PLAIN_TEXT_TRADITIONAL, branch_name]]
-
-    pasteboard.put name
+    pasteboard.put [[Pasteboard::Type::PLAIN_TEXT_TRADITIONAL, text]]
   end
 end

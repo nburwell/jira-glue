@@ -22,6 +22,7 @@ class Glue
     @impact = true # Backwards compatibility
     if fields = config["fields"]
       @impact = fields["impact"]
+      @date_prefix = fields["date_prefix"]
     end
   end
 
@@ -92,12 +93,11 @@ class Glue
 
     # Formatting: downcase -> replace specific non-alphanumeric characters with spaces -> remove non-alphanumberic characters -> replace spaces with join
     summary_formatted = summary.downcase.tr(':;()-.', ' ').gsub(/[^a-z0-9\s&]/, '').split(' ').join('_')
-    month             = Date.today.month
-    month_formatted   = month > 9 ? month : "0#{month}"
-    date              = "#{Date.today.year % 100}#{month_formatted}"
-    branch_name       = "#{date}/#{issue.key}_#{summary_formatted}"
+    date_prefix       = @date_prefix || "%y%m"
 
-    Clipboard.insert_branch!(branch_name) if copy_to_clipboard
+    branch_name       = "#{Time.new.strftime(date_prefix)}/#{issue.key}_#{summary_formatted}"
+
+    Clipboard.insert_text!(branch_name) if copy_to_clipboard
 
     branch_name
   end
