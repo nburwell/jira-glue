@@ -15,14 +15,14 @@ class Glue
 
     config && config["app"] or raise "config file is not setup correctly: it is missing the 'app' key. See README for setup instructions"
 
-    @notifier = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
-    @jira     = JIRA::Wrapper.new(config, @notifier)
-    @browser  = Browser.new(browser_name, @jira.base_url)
+    @notifier      = Notifier.new(config["app"]["name"], config["app"]["title"], browser_name)
+    @jira          = JIRA::Wrapper.new(config, @notifier)
+    @browser       = Browser.new(browser_name, @jira.base_url)
+    @prefix_format = config["prefix"] && config["prefix"]["date_format"]
 
     @impact = true # Backwards compatibility
     if fields = config["fields"]
       @impact = fields["impact"]
-      @date_prefix = fields["date_prefix"]
     end
   end
 
@@ -93,9 +93,9 @@ class Glue
 
     # Formatting: downcase -> replace specific non-alphanumeric characters with spaces -> remove non-alphanumberic characters -> replace spaces with join
     summary_formatted = summary.downcase.tr(':;()-.', ' ').gsub(/[^a-z0-9\s&]/, '').split(' ').join('_')
-    date_prefix       = @date_prefix || "%y%m"
+    prefix            = @prefix_format ? "#{Time.new.strftime(@prefix_format)}/" : ''
 
-    branch_name       = "#{Time.new.strftime(date_prefix)}/#{issue.key}_#{summary_formatted}"
+    branch_name       = "#{prefix}#{issue.key}_#{summary_formatted}"
 
     Clipboard.insert_text!(branch_name) if copy_to_clipboard
 
