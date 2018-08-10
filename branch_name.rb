@@ -9,7 +9,7 @@ g = Glue.new(config)
 
 input_array = ARGV
 
-key = input_array.find{ |arg| arg != '-c' }
+key = input_array.find { |arg| arg != '-c' }
 
 copy_to_clip_board = input_array.include? '-c'
 
