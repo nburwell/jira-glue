@@ -63,7 +63,7 @@ fields:
 
 [View other Authentication options, including user & password](https://github.com/nburwell/jira-glue/wiki/Authentication)
 
-##### Setup Ruby and run bundle install (tested against Ruby 1.9.3 and 2.1.2)
+##### Setup Ruby and run bundle install (tested against Ruby 1.9.3, 2.1.2, and 2.4.2)
 
 ```bash
 bundle install
@@ -168,6 +168,62 @@ ruby ./input.rb
 # paste in JIRA keys, one line at a time
 ```
 
-#### Potential bundle issues
+#### Build a Git Branch name from a Jira Issue
+The file branch_name.rb can be used to create a git branch name from a Jira issue.
 
-As of `2018-07-09` (YYYY-MM-DD), `bundle install` fails due to `scpt-1.0.2` on ruby version `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-darwin17]`. This issue should be resolved in the future once a new gem version is released, but meanwhile the issue can be fixed manually by telling the Gemfile to pull from the `develop` branch of `https://github.com/BrendanThompson/rb-scpt`. See `https://github.com/nburwell/jira-glue/tree/fix_rb-scpt-1.0.2_breaks` for an updated Gemfile that includes this change. [Note: Since this fix should be temporary, the Gemfile in master was left as it was]
+The name is created using the jira issue key followed by the 
+summary/description with most non-alphanumeric characters and spaces turned to underscores.
+
+
+##### Example Branch Name:
+
+Given the following:
+* Jira Issue Number: STORY-123
+* Jira Issue Description: Fix Jira-glue bug
+
+The branch name would be the following:
+```
+STORY-123_fix_jira_glue_bug
+```
+
+##### Sample Output:
+```
+ruby ./branch_name.rb STORY-123
+STORY-123_jira_issue_description
+```
+
+Use the -c flag after the jira issue to have the branch name copied to your clipboard.
+
+```
+ruby ./branch_name.rb STORY-123 -c
+```
+
+##### Adding a Prefix:
+If you would like to add a prefix to the branch name, you may specify a date format in the config.yml file.
+
+```
+# config.yml
+prefix:
+    date_format: "your_date_format_here"
+```
+
+See the following article for information on date/time format strings:
+https://ruby-doc.org/core-2.4.0/Time.html#method-i-strftime
+
+##### Example with a prefix:
+First set the date_format in config.yml
+```
+# config.yml
+prefix:
+    date_format: "%y%m"
+```
+
+Next run branch_name.rb
+```
+ruby ./branch_name.rb STORY-123 -c
+```
+
+The branch name would now have the following prefix:
+```
+YYMM/STORY-123_jira_issue_description
+```

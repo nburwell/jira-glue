@@ -22,4 +22,10 @@ class Clipboard
 
     pasteboard.put item
   end
+
+  def self.insert_text!(text)
+    pasteboard = Pasteboard.new
+
+    pasteboard.put [[Pasteboard::Type::PLAIN_TEXT_TRADITIONAL, text]]
+  end
 end
