@@ -227,3 +227,17 @@ The branch name would now have the following prefix:
 ```
 YYMM/STORY-123_jira_issue_description
 ```
+
+##### Sub-Task Support
+If the JIRA Issue provided is a sub-task, the branch name will include the parent issue key and description followed by the sub-task key and description.
+
+Given the following:
+* Jira Issue Number: STORY-123
+* Jira Issue Description: Fix Jira-glue bug
+* Sub-Task of STORY-123 Issue Number: STORY-124
+* Sub-Task of STORY-123 Issue Description: Add documentation
+
+```
+ruby ./branch_name.rb STORY-124
+STORY-123_fix_jira_glue_bug.STORY-124_add_documentation
+```
