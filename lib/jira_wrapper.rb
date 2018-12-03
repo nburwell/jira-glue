@@ -64,7 +64,7 @@ module JIRA
     
     def issues_from_jql(jql)
       begin
-        @jira_client.Issue.jql(jql, { max_results: 100})
+        @jira_client.Issue.jql(jql, { max_results: 100 })
       rescue JIRA::HTTPError => ex
         handle_jira_error(ex, "Unable to get issues from jql: #{jql}")
         raise ex
@@ -98,6 +98,41 @@ module JIRA
       response.to_s.empty? ? nil : response
     end
 
+    # current labels: sharks, mavericks, earlybirds, swift
+    def release_issues_for_label(label, release_name)
+      ["WEB", "STORY", "TECH"].map do |project|
+        if(issues = find_release_candidates_for(project, label))
+          create_version!(release_name, project: project)
+
+          issues.map do |issue|
+            issue.save('fields' => { 'fixVersions' => [{ 'name' => release_name }] })
+            issue
+          end
+        end
+      end
+    end
+
+    # id != the release name. https://developer.atlassian.com/cloud/jira/platform/rest/v3/#api-api-3-version-post
+    def find_version(global_version_id)
+      begin
+        @jira_client.Version.find(global_version_id)
+      rescue JIRA::HTTPError => ex
+        puts ex.message
+        nil
+      end
+    end
+
+    def create_version!(release_name, project: "STORY_", released: "true")
+      begin
+        version = @jira_client.Version.build
+        version.save({ "project" => project, "name" => release_name, "released" => released })
+        version.attrs["id"]
+      rescue JIRA::HTTPError => ex
+        handle_jira_error(ex, "Unable to create version with name #{release_name}: #{ex.message}")
+        raise
+      end
+    end
+
     private
     
     def handle_jira_error(ex, context = nil)
@@ -106,6 +141,11 @@ module JIRA
       else
         @notifier.show_message!("#{"#{context}\n" if context}#{ex.message}")
       end
+    end
+
+    # move this to caller, too specific to jira live in jira wrapper
+    def find_release_candidates_for(project, label)
+      issues_from_jql("labels = #{label} AND NOT (status = closed AND issuetype = Epic) AND issuetype != \"6\" AND (status != closed OR fixVersion = EMPTY) AND status = \"6\" AND project = \"#{project}\" AND fixVersion is EMPTY ORDER BY \"Rank - Greenhopper\" ASC")
     end
     
     ###########################
