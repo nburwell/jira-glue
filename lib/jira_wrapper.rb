@@ -98,31 +98,7 @@ module JIRA
       response.to_s.empty? ? nil : response
     end
 
-    # current labels: sharks, mavericks, earlybirds, swift
-    def release_issues_for_label(label, release_name)
-      ["WEB", "STORY", "TECH"].map do |project|
-        if(issues = find_release_candidates_for(project, label))
-          create_version!(release_name, project: project)
-
-          issues.map do |issue|
-            issue.save('fields' => { 'fixVersions' => [{ 'name' => release_name }] })
-            issue
-          end
-        end
-      end
-    end
-
-    # id != the release name. https://developer.atlassian.com/cloud/jira/platform/rest/v3/#api-api-3-version-post
-    def find_version(global_version_id)
-      begin
-        @jira_client.Version.find(global_version_id)
-      rescue JIRA::HTTPError => ex
-        puts ex.message
-        nil
-      end
-    end
-
-    def create_version!(release_name, project: "STORY_", released: "true")
+    def create_version!(release_name, project:, released: "true")
       begin
         version = @jira_client.Version.build
         version.save({ "project" => project, "name" => release_name, "released" => released })
@@ -143,11 +119,6 @@ module JIRA
       end
     end
 
-    # move this to caller, too specific to jira live in jira wrapper
-    def find_release_candidates_for(project, label)
-      issues_from_jql("labels = #{label} AND NOT (status = closed AND issuetype = Epic) AND issuetype != \"6\" AND (status != closed OR fixVersion = EMPTY) AND status = \"6\" AND project = \"#{project}\" AND fixVersion is EMPTY ORDER BY \"Rank - Greenhopper\" ASC")
-    end
-    
     ###########################
     
     public
