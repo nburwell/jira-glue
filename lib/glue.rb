@@ -112,7 +112,7 @@ class Glue
     issue_description, = @jira.issue_description_and_link_from_issue(issue)
 
     # Formatting: downcase -> replace specific non-alphanumeric characters with spaces -> remove non-alphanumberic characters -> replace spaces with join
-    formatted_issue_description = issue_description.downcase.tr(':;()-.', ' ').gsub(/[^a-z0-9\s&]/, '').split(' ').join('_')
+    formatted_issue_description = issue_description.downcase.tr(':;()-.', ' ').gsub(/[^a-z0-9\s_&]/, '').split(' ').join('_')
 
     "#{issue.key}_#{formatted_issue_description}"
   end
