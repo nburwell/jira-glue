@@ -1,7 +1,7 @@
 JIRA Glue
 =========
 
-Command line utility app for JIRA tracking system. 
+Command line utility app for JIRA tracking system.
 
 Wraps the ruby JIRA API with the ability to:
 * Get the issue(s) being viewed in the active browser tab and put on the clipboard in a nicely formatted way (convenient when wired to a global hotkey!)
@@ -24,13 +24,13 @@ app:
   name: jira-glue
   title: JIRA glue
 
-jira_client:     
+jira_client:
   base_url: https://your-company.atlassian.net
   # authentication params (see readme)
 
 fields:
   impact: false
-  
+
 # optional (to use Safari)
 # browser:
 #   name: Safari
@@ -47,7 +47,7 @@ app:
   name: jira-glue
   title: JIRA glue
 
-jira_client:     
+jira_client:
   # ---- PASTE OAUTH CREDENTIALS FROM GENERATOR HERE: ----
   base_url: https://your-company.atlassian.net
   consumer_key: '...'
@@ -87,6 +87,8 @@ ruby demo.rb
 Visit the [Launchd server client setup](https://github.com/nburwell/jira-glue/wiki/Launchd-server-client-setup) wiki page if you are interested in setting up a launchd process that makes global hotkey automation easy.
 
 Set up [global hotkeys using Automator or other Mac solutions](https://github.com/nburwell/jira-glue/wiki/Setup-Global-Hotkeys-(Mac)) for quick access to JIRA ticket information on the clipboard.
+
+Optional [Alfred Workflow from theis project](alfred/README.md) which requires the Alfred Powerpack
 
 ### Documentation
 
@@ -130,19 +132,19 @@ jira = JIRA::Wrapper.new(config, Notifier.new)
 You can then have access to the following methods:
 ```
 # key (string) such as "WEB-123" or "STORY-456"
-jira.find_issue(key)       
-  
+jira.find_issue(key)
+
 # jql (string) JIRA query language syntax such as "issuekey in (WEB-123, STORY-456) order by issuekey"
-jira.issues_from_jql(jql)  
-  
+jira.issues_from_jql(jql)
+
 # filter_id (string) JIRA filter ID, found in url when viewing a saved filter
 jira.issues_from_filter(filter_id)
 
-# issue (JIRA::Issue) 
+# issue (JIRA::Issue)
 jira.issue_description_and_link_from_issue(issue)
 ```
 
-The Issue objects returned are `JIRA::Resource::Issue` instances from https://github.com/sumoheavy/jira-ruby/tree/v0.1.17  
+The Issue objects returned are `JIRA::Resource::Issue` instances from https://github.com/sumoheavy/jira-ruby/tree/v0.1.17
 See their documentation and source code for more information on what is available.
 
 #### Client scripts
@@ -171,7 +173,7 @@ ruby ./input.rb
 #### Build a Git Branch name from a Jira Issue
 The file branch_name.rb can be used to create a git branch name from a Jira issue.
 
-The name is created using the jira issue key followed by the 
+The name is created using the jira issue key followed by the
 summary/description with most non-alphanumeric characters and spaces turned to underscores.
 
 
