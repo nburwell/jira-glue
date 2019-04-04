@@ -1,4 +1,6 @@
 # Setup Alfred workflow
+ * Clone the repo and do the setup from the main readme
+ * Use the commands below from the main directory to setup Alfred
  * Link the shell script into your local bin directory.  This is where Alfred looks for the script by default
  ```sh
    ln -s $PWD/bin/jira-link-copy.sh ~/bin/
