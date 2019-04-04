@@ -20,7 +20,8 @@ module JIRA
     def initialize(config, notifier, debug: false)
       client_options            = JIRA_CLIENT_OPTIONS.dup
             
-      @app_name                 = config["app"]["name"]
+      config && config["app"] && config["jira_client"]                                                  or raise "config file is not setup correctly: missing the 'app' and/or 'jira_client' key. See README for setup instructions"
+      @app_name                 = config["app"]["name"]                                                 or raise "app['name'] not set in config"
       @base_url                 = config["jira_client"]["base_url"]                                     or raise "jira_client['base_url'] not set in config"
       @notifier                 = notifier
 
