@@ -88,7 +88,7 @@ Visit the [Launchd server client setup](https://github.com/nburwell/jira-glue/wi
 
 Set up [global hotkeys using Automator or other Mac solutions](https://github.com/nburwell/jira-glue/wiki/Setup-Global-Hotkeys-(Mac)) for quick access to JIRA ticket information on the clipboard.
 
-Optional [Alfred Workflow from theis project](alfred/README.md) which requires the Alfred Powerpack
+Optional [Alfred Workflow from this project](alfred/README.md) which requires the Alfred Powerpack
 
 ### Documentation
 
