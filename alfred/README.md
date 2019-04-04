@@ -5,7 +5,6 @@
  ```sh
    ln -s $PWD/bin/jira-link-copy.sh ~/bin/
  ```
-  * If you use `rbenv` uncomment that line in the .sh script
   * Install the Alfred Workflow
 ```sh
   open 'alfred/Jira Link Copy.alfredworkflow'
