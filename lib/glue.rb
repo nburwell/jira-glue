@@ -65,7 +65,7 @@ class Glue
 
     html << '</ul><br />'
 
-    Clipboard.insert!(html, text, text)
+    ClipboardHelper.insert!(html, text, text)
 
     # @notifier.show_message!("Added #{issues.count} issues to clipboard")
   end
@@ -83,7 +83,7 @@ class Glue
     html = "<a href='#{link}'>#{issue.key}</a>: #{summary}#{impact_html}"
     text = "#{issue.key}: #{summary}"
     slack_text = "#{issue.key}: #{summary}\n#{link}"
-    Clipboard.insert!(html, text, slack_text)
+    ClipboardHelper.insert!(html, text, slack_text)
 
     # @notifier.show_message!("Added #{issue.key} to clipboard")
     [summary, link, impact]
@@ -97,7 +97,7 @@ class Glue
     prefix         = @prefix_format ? "#{Time.new.strftime(@prefix_format)}/" : ''
     branch_name    = "#{prefix}#{parent_summary}#{summary}"
 
-    Clipboard.insert_text!(branch_name) if copy_to_clipboard
+    ClipboardHelper.insert_text!(branch_name) if copy_to_clipboard
 
     branch_name
   end
