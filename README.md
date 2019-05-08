@@ -75,6 +75,11 @@ If you run into problems getting the pasteboard gem and you are on OS X, you may
 xcode-select --install
 ```
 
+Additionally, if on MacOS Mojave (10.14), you may also need to run the following to be able to install Pasteboard:
+```
+open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+```
+
 ##### Test it out!
 ```
 ruby demo.rb
