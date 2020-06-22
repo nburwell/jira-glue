@@ -14,8 +14,7 @@ GEM
       oauth (~> 0.4.7)
     minitest (5.11.3)
     oauth (0.4.7)
-    pasteboard (1.0)
-    rb-scpt (1.0.2)
+    rb-scpt (1.0.3)
     terminal-notifier (1.5.1)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
@@ -26,9 +25,8 @@ PLATFORMS
 
 DEPENDENCIES
   jira-ruby (= 0.1.17)
-  pasteboard
   rb-scpt
   terminal-notifier (= 1.5.1)
 
 BUNDLED WITH
-   1.16.1
+   1.17.3
