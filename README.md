@@ -36,10 +36,12 @@ fields:
 #   name: Safari
 ```
 
-##### Get Oauth Credentials
+##### Get an API token
 
-To authenticate to the JIRA API via Oauth, you will need to have an OAuth app configured on your JIRA instance (in the Application Links section), and you will then provide in the config.yml the consumer_key (App specific), access_token and access_key (user specific). This assumes you can already generate Oauth tokens on a user's behalf with that consumer_key as well.
+The recommened way to authenticate to the JIRA API is using an API token associated to your Jira user account. This works even if your Jira instance is configured for SSO via Google, Okta, etc. 
 
+1) Log in with your account and go to Profile > Account Settings > Security > [Create and manage API tokens](https://id.atlassian.com/manage-profile/security/api-tokens) and create a new token.
+1) Save the API token in the following ENV variable: `JIRA_PASSWORD` or if on MacOS, you can put into the Keychain app ([see details](https://github.com/nburwell/jira-glue/wiki/Authentication#if-using-keychain-for-password))
 1) Provide the required key/values in the `config.yml` under `jira_client`:
 
 ```yaml
@@ -48,18 +50,14 @@ app:
   title: JIRA glue
 
 jira_client:
-  # ---- PASTE OAUTH CREDENTIALS FROM GENERATOR HERE: ----
   base_url: https://your-company.atlassian.net
-  consumer_key: '...'
-  access_token: '...'
-  access_key: '...'
+  auth_type: "basic"
+  username: "your-jira-username"
 
 fields:
   impact: false
 ```
 
-2) Save the private key that was used when setting up the app in JIRA's Application Link to `rsakey.pem` in the root folder
-  * This is gitignored by default, do not check this into any public repos
 
 [View other Authentication options, including user & password](https://github.com/nburwell/jira-glue/wiki/Authentication)
 
@@ -68,16 +66,6 @@ fields:
 ```bash
 bundle install
 rbenv rehash
-```
-
-If you run into problems getting the pasteboard gem and you are on OS X, you may need the command line developer tools installed:
-```
-xcode-select --install
-```
-
-Additionally, if on MacOS Mojave (10.14), you may also need to run the following to be able to install Pasteboard:
-```
-open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
 ```
 
 ##### Test it out!
